@@ -54,38 +54,46 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    LESS_THAN = 258,               /* LESS_THAN  */
-    GREATER_THAN = 259,            /* GREATER_THAN  */
-    COLON = 260,                   /* COLON  */
-    SLASH = 261,                   /* SLASH  */
-    ASSIGN = 262,                  /* ASSIGN  */
-    BACKSLASH = 263,               /* BACKSLASH  */
-    MYHTML = 264,                  /* MYHTML  */
-    ID = 265,                      /* ID  */
-    HEAD = 266,                    /* HEAD  */
-    BODY = 267,                    /* BODY  */
-    TITLE = 268,                   /* TITLE  */
-    META = 269,                    /* META  */
-    CHARSET = 270,                 /* CHARSET  */
-    NAME = 271,                    /* NAME  */
-    CONTENT = 272,                 /* CONTENT  */
-    PARAGRAPH = 273,               /* PARAGRAPH  */
-    STYLE = 274,                   /* STYLE  */
-    LINK = 275,                    /* LINK  */
-    IMAGE = 276,                   /* IMAGE  */
-    SOURCE = 277,                  /* SOURCE  */
-    ALT = 278,                     /* ALT  */
-    WIDTH = 279,                   /* WIDTH  */
-    HEIGHT = 280,                  /* HEIGHT  */
-    FORM = 281,                    /* FORM  */
-    INPUT = 282,                   /* INPUT  */
-    LABEL = 283,                   /* LABEL  */
-    TYPE = 284,                    /* TYPE  */
-    VALUE = 285,                   /* VALUE  */
-    CONTAINER = 286,               /* CONTAINER  */
-    FOR = 287,                     /* FOR  */
-    INT = 288,                     /* INT  */
-    STRING = 289                   /* STRING  */
+    TEXT = 258,                    /* TEXT  */
+    QUOTED_STRING = 259,           /* QUOTED_STRING  */
+    NUMBER = 260,                  /* NUMBER  */
+    OPEN_MYHTML = 261,             /* OPEN_MYHTML  */
+    CLOSE_MYHTML = 262,            /* CLOSE_MYHTML  */
+    OPEN_HEAD = 263,               /* OPEN_HEAD  */
+    CLOSE_HEAD = 264,              /* CLOSE_HEAD  */
+    OPEN_BODY = 265,               /* OPEN_BODY  */
+    CLOSE_BODY = 266,              /* CLOSE_BODY  */
+    OPEN_TITLE = 267,              /* OPEN_TITLE  */
+    CLOSE_TITLE = 268,             /* CLOSE_TITLE  */
+    OPEN_META = 269,               /* OPEN_META  */
+    OPEN_P = 270,                  /* OPEN_P  */
+    CLOSE_P = 271,                 /* CLOSE_P  */
+    OPEN_A = 272,                  /* OPEN_A  */
+    CLOSE_A = 273,                 /* CLOSE_A  */
+    OPEN_IMG = 274,                /* OPEN_IMG  */
+    OPEN_FORM = 275,               /* OPEN_FORM  */
+    CLOSE_FORM = 276,              /* CLOSE_FORM  */
+    OPEN_INPUT = 277,              /* OPEN_INPUT  */
+    OPEN_LABEL = 278,              /* OPEN_LABEL  */
+    CLOSE_LABEL = 279,             /* CLOSE_LABEL  */
+    OPEN_DIV = 280,                /* OPEN_DIV  */
+    CLOSE_DIV = 281,               /* CLOSE_DIV  */
+    ID_ATTR = 282,                 /* ID_ATTR  */
+    STYLE_ATTR = 283,              /* STYLE_ATTR  */
+    HREF_ATTR = 284,               /* HREF_ATTR  */
+    SRC_ATTR = 285,                /* SRC_ATTR  */
+    ALT_ATTR = 286,                /* ALT_ATTR  */
+    WIDTH_ATTR = 287,              /* WIDTH_ATTR  */
+    HEIGHT_ATTR = 288,             /* HEIGHT_ATTR  */
+    TYPE_ATTR = 289,               /* TYPE_ATTR  */
+    VALUE_ATTR = 290,              /* VALUE_ATTR  */
+    FOR_ATTR = 291,                /* FOR_ATTR  */
+    NAME_ATTR = 292,               /* NAME_ATTR  */
+    CONTENT_ATTR = 293,            /* CONTENT_ATTR  */
+    CHARSET_ATTR = 294,            /* CHARSET_ATTR  */
+    TAG_CLOSE = 295,               /* TAG_CLOSE  */
+    COMMENT = 296,                 /* COMMENT  */
+    ERROR = 297                    /* ERROR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -94,13 +102,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 13 "bison.y"
+#line 12 "bison.y"
 
-    int intval;
-    char *strval;
-    char charval;
+    char* str;
+    int num;
 
-#line 104 "bison.tab.h"
+#line 111 "bison.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
