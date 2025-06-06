@@ -141,14 +141,15 @@ head_opt:
 ;
 
 head:
-    OPEN_HEAD {printf("<head>\n");} title meta_opt CLOSE_HEAD
+    OPEN_HEAD {printf("<head>\n");} title meta_opt CLOSE_HEAD {printf("</head>");}
 ;
 
 title:
-    OPEN_TITLE TEXT {printf("%s",strbuf(str,strlen));} CLOSE_TITLE {
-        if (strlen($2) > MAX_TITLE_LEN) {
+    OPEN_TITLE {printf("<title>");}  TEXT CLOSE_TITLE {
+        if (strlen($3) > MAX_TITLE_LEN) {
             yyerror("Title exceeds 60 characters");
         }
+        else printf("</title>");
     }
 ;
 
@@ -163,11 +164,11 @@ meta_list:
 ;
 
 meta:
-    OPEN_META attr_list TAG_CLOSE
+    OPEN_META {printf("<meta");} attr_list TAG_CLOSE {printf(">");}
 ;
 
 body:
-    OPEN_BODY body_elements_opt CLOSE_BODY
+    OPEN_BODY {printf("<body>");} body_elements_opt CLOSE_BODY {printf("</body>");}
 ;
 
 body_elements_opt:
@@ -185,11 +186,11 @@ element:
 ;
 
 paragraph:
-    OPEN_P attr_list_opt TAG_CLOSE TEXT CLOSE_P
+    OPEN_P {printf("<p ");} attr_list_opt TAG_CLOSE {printf(">\n");} TEXT CLOSE_P {printf("</p>\n");}
 ;
 
 anchor:
-    OPEN_A attr_list TAG_CLOSE anchor_content CLOSE_A
+    OPEN_A {printf("<a ");} attr_list TAG_CLOSE {printf(">\n");} anchor_content CLOSE_A {printf("</a>\n");}
 ;
 
 anchor_content:
@@ -198,11 +199,11 @@ anchor_content:
 ;
 
 image:
-    OPEN_IMG attr_list TAG_CLOSE
+    OPEN_IMG {printf("<img ");} attr_list TAG_CLOSE {printf(">\n");}
 ;
 
 form:
-    OPEN_FORM attr_list_opt TAG_CLOSE form_content CLOSE_FORM
+    OPEN_FORM {printf("<form ");} attr_list_opt TAG_CLOSE {printf(">\n");} form_content CLOSE_FORM {printf("</form>\n");}
 ;
 
 form_content:
@@ -215,15 +216,15 @@ form_element:
 ;
 
 input:
-    OPEN_INPUT attr_list TAG_CLOSE
+    OPEN_INPUT {printf("<input ");} attr_list TAG_CLOSE
 ;
 
 label:
-    OPEN_LABEL attr_list_opt TAG_CLOSE TEXT CLOSE_LABEL
+    OPEN_LABEL  {printf("<label ");}attr_list_opt TAG_CLOSE {printf(">");} TEXT CLOSE_LABEL {printf("</label>");}
 ;
 
 division:
-    OPEN_DIV attr_list_opt TAG_CLOSE body_elements_opt CLOSE_DIV
+    OPEN_DIV {printf("<div ");} attr_list_opt TAG_CLOSE {printf(">");} body_elements_opt CLOSE_DIV {printf("</div>");}
 ;
 
 comment:
