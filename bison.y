@@ -128,7 +128,7 @@ void yyerror(const char *err) {
 %%
 
 program:
-    OPEN_MYHTML {printf("<MYHTML>\n");} content CLOSE_MYHTML { printf("Valid myHTML document.\n"); }
+    OPEN_MYHTML {printf("<MYHTML>\n");} content CLOSE_MYHTML { printf("</MYHTML>\nValid myHTML document.\n"); }
 ;
 
 content:
@@ -141,15 +141,15 @@ head_opt:
 ;
 
 head:
-    OPEN_HEAD {printf("<head>\n");} title meta_opt CLOSE_HEAD {printf("</head>");}
+    OPEN_HEAD {printf("<head>\n");} title meta_opt CLOSE_HEAD {printf("</head>\n");}
 ;
 
 title:
-    OPEN_TITLE {printf("<title>");}  TEXT CLOSE_TITLE {
+    OPEN_TITLE {printf("<title>");}  TEXT {printf("%s",yylval.str);} CLOSE_TITLE {
         if (strlen($3) > MAX_TITLE_LEN) {
             yyerror("Title exceeds 60 characters");
         }
-        else printf("</title>");
+        else printf("</title>\n");
     }
 ;
 
@@ -164,11 +164,11 @@ meta_list:
 ;
 
 meta:
-    OPEN_META {printf("<meta");} attr_list TAG_CLOSE {printf(">");}
+    OPEN_META {printf("<meta ");} attr_list TAG_CLOSE {printf(">\n");}
 ;
 
 body:
-    OPEN_BODY {printf("<body>");} body_elements_opt CLOSE_BODY {printf("</body>");}
+    OPEN_BODY {printf("<body>\n");} body_elements_opt CLOSE_BODY {printf("</body>\n");}
 ;
 
 body_elements_opt:
@@ -186,7 +186,7 @@ element:
 ;
 
 paragraph:
-    OPEN_P {printf("<p ");} attr_list_opt TAG_CLOSE {printf(">\n");} TEXT CLOSE_P {printf("</p>\n");}
+    OPEN_P {printf("<p ");} attr_list_opt TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_P {printf("</p>\n");}
 ;
 
 anchor:
@@ -194,7 +194,7 @@ anchor:
 ;
 
 anchor_content:
-    TEXT image
+    TEXT {printf("%s",yylval.str);} image
     |image
 ;
 
@@ -216,15 +216,15 @@ form_element:
 ;
 
 input:
-    OPEN_INPUT {printf("<input ");} attr_list TAG_CLOSE
+    OPEN_INPUT {printf("<input ");} attr_list TAG_CLOSE {printf(">\n");}
 ;
 
 label:
-    OPEN_LABEL  {printf("<label ");}attr_list_opt TAG_CLOSE {printf(">");} TEXT CLOSE_LABEL {printf("</label>");}
+    OPEN_LABEL  {printf("<label ");}attr_list_opt TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_LABEL {printf("</label>\n");}
 ;
 
 division:
-    OPEN_DIV {printf("<div ");} attr_list_opt TAG_CLOSE {printf(">");} body_elements_opt CLOSE_DIV {printf("</div>");}
+    OPEN_DIV {printf("<div ");} attr_list_opt TAG_CLOSE {printf(">\n");} body_elements_opt CLOSE_DIV {printf("</div>\n");}
 ;
 
 comment:
@@ -242,40 +242,40 @@ attr_list:
 ;
 
 attribute:
-    ID_ATTR EQUALS QUOTED_STRING {
-        if (!is_unique_id($3)) yyerror("Duplicate ID");
+    ID_ATTR {printf("id");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}{
+        if (!is_unique_id($5)) yyerror("Duplicate ID");
         else {
-            add_element_id($3);
-            add_input_id($3);
+            add_element_id($5);
+            add_input_id($5);
         }
     }
-    | STYLE_ATTR EQUALS QUOTED_STRING {
-        if (!is_valid_style($3)) yyerror("Invalid style attribute");
+    | STYLE_ATTR {printf("style");} EQUALS {printf("=");} QUOTED_STRING {{printf("\"%s\"",yylval.str);}
+        if (!is_valid_style($5)) yyerror("Invalid style attribute");
     }
-    | HREF_ATTR EQUALS QUOTED_STRING {
-        if (!is_valid_url($3)) yyerror("Invalid href URL");
+    | HREF_ATTR {printf("href");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}{
+        if (!is_valid_url($5)) yyerror("Invalid href URL");
     }
-    | SRC_ATTR EQUALS QUOTED_STRING {
-        if (!is_valid_url($3)) yyerror("Invalid src URL");
+    | SRC_ATTR {printf("src");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}{
+        if (!is_valid_url($5)) yyerror("Invalid src URL");
     }
-    | TYPE_ATTR EQUALS QUOTED_STRING {
-        if (strcmp($3, "submit") == 0) {
+    | TYPE_ATTR {printf("type");} EQUALS {printf("=");} QUOTED_STRING {{printf("\"%s\"",yylval.str);}
+        if (strcmp($5, "submit") == 0) {
             submit_input_count++;
             if (submit_input_count > 1) yyerror("Only one submit input allowed");
-        } else if (strcmp($3, "text") != 0 && strcmp($3, "checkbox") != 0 && strcmp($3, "radio") != 0) {
+        } else if (strcmp($5, "text") != 0 && strcmp($5, "checkbox") != 0 && strcmp($5, "radio") != 0) {
             yyerror("Invalid type attribute");
         }
     }
-    | FOR_ATTR EQUALS QUOTED_STRING {
-        if (!input_id_exists($3)) yyerror("'for' must reference a valid input id");
+    | FOR_ATTR {printf("for");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}{
+        if (!input_id_exists($5)) yyerror("'for' must reference a valid input id");
     }
-    | NAME_ATTR EQUALS QUOTED_STRING
-    | VALUE_ATTR EQUALS QUOTED_STRING
-    | ALT_ATTR EQUALS QUOTED_STRING
-    | WIDTH_ATTR EQUALS NUMBER
-    | HEIGHT_ATTR EQUALS NUMBER
-    | CONTENT_ATTR EQUALS QUOTED_STRING
-    | CHARSET_ATTR EQUALS QUOTED_STRING
+    | NAME_ATTR {printf("name");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}
+    | VALUE_ATTR {printf("value");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}
+    | ALT_ATTR  {printf("alt");}EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}
+    | WIDTH_ATTR {printf("width");} EQUALS {printf("=");} NUMBER {printf("%d",yylval.num);}
+    | HEIGHT_ATTR {printf("height");} EQUALS {printf("=");} NUMBER {printf("%d",yylval.num);}
+    | CONTENT_ATTR {printf("content");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}
+    | CHARSET_ATTR {printf("charset");}EQUALS {printf("=");} QUOTED_STRING{printf("\"%s\"",yylval.str);}
 ;
 
 %%
