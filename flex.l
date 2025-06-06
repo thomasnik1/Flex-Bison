@@ -10,7 +10,7 @@ extern int yylineno;
 
 %%
 
-"<!--"([^><-]|(-[^->])|(\n))*"-->"   { return COMMENT; }
+<INITIAL>"<!--"([^><-]|(-[^->])|(\n))*"-->"   { return COMMENT; }
 
 <INITIAL>"<MYHTML>"      { return OPEN_MYHTML; }
 <INITIAL>"</MYHTML>"     { return CLOSE_MYHTML; }
@@ -82,7 +82,6 @@ extern int yylineno;
 [ \t\r]+ ;
 
 <INITIAL>[^<>\n]+   {
-    printf("OK \n");
     yylval.str = strdup(yytext);
     return TEXT;
 }

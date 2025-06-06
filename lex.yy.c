@@ -1084,14 +1084,13 @@ case 43:
 YY_RULE_SETUP
 #line 84 "flex.l"
 {
-    printf("OK \n");
     yylval.str = strdup(yytext);
     return TEXT;
 }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 90 "flex.l"
+#line 89 "flex.l"
 {
     fprintf(stderr, "Unknown character: %s (line %d)\n", yytext, yylineno);
     return ERROR;
@@ -1099,10 +1098,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 95 "flex.l"
+#line 94 "flex.l"
 ECHO;
 	YY_BREAK
-#line 1106 "lex.yy.c"
+#line 1105 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_TAG):
 	yyterminate();
@@ -2108,7 +2107,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 95 "flex.l"
+#line 94 "flex.l"
 
 
 int yywrap() {

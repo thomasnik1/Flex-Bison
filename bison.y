@@ -128,7 +128,7 @@ void yyerror(const char *err) {
 %%
 
 program:
-    OPEN_MYHTML content CLOSE_MYHTML { printf("Valid myHTML document.\n"); }
+    OPEN_MYHTML {printf("<MYHTML>\n");} content CLOSE_MYHTML { printf("Valid myHTML document.\n"); }
 ;
 
 content:
@@ -141,11 +141,11 @@ head_opt:
 ;
 
 head:
-    OPEN_HEAD title meta_opt CLOSE_HEAD
+    OPEN_HEAD {printf("<head>\n");} title meta_opt CLOSE_HEAD
 ;
 
 title:
-    OPEN_TITLE TEXT CLOSE_TITLE {
+    OPEN_TITLE TEXT {printf("%s",strbuf(str,strlen));} CLOSE_TITLE {
         if (strlen($2) > MAX_TITLE_LEN) {
             yyerror("Title exceeds 60 characters");
         }

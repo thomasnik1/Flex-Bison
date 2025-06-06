@@ -6,7 +6,6 @@
     <meta name="author" content="Input your name here">
 </head>
 <body>
-
     <p id="par1">This is my project.</p>
 
     <div id="div1" style="color:blue">
