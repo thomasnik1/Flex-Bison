@@ -6,73 +6,74 @@
 extern int yylineno;
 %}
 
+%x IN_TAG 
+
 %%
 
 "<!--"([^><-]|(-[^->])|(\n))*"-->"   { return COMMENT; }
 
-"="     { return EQUALS; }
+<INITIAL>"<MYHTML>"      { return OPEN_MYHTML; }
+<INITIAL>"</MYHTML>"     { return CLOSE_MYHTML; }
+<INITIAL>"<head>"        { return OPEN_HEAD; }
+<INITIAL>"</head>"       { return CLOSE_HEAD; }
+<INITIAL>"<body>"        { return OPEN_BODY; }
+<INITIAL>"</body>"       { return CLOSE_BODY; }
 
-"<MYHTML>"      { return OPEN_MYHTML; }
-"</MYHTML>"     { return CLOSE_MYHTML; }
-"<head>"        { return OPEN_HEAD; }
-"</head>"       { return CLOSE_HEAD; }
-"<body>"        { return OPEN_BODY; }
-"</body>"       { return CLOSE_BODY; }
+<INITIAL>"<title>"       { return OPEN_TITLE; }
+<INITIAL>"</title>"      { return CLOSE_TITLE; }
 
-"<title"       { return OPEN_TITLE; }
-"</title>"      { return CLOSE_TITLE; }
-"<meta"       { return OPEN_META; }
+<INITIAL>"<meta"[ \t\n\r]      { BEGIN(IN_TAG); return OPEN_META; }
 
-"<p"[ \t\n\r]*          { return OPEN_P; }
-"</p>"          { return CLOSE_P; }
+<INITIAL>"<p"[ \t\n\r]*        { BEGIN(IN_TAG); return OPEN_P; }
+<INITIAL>"</p>"                { return CLOSE_P; }
 
-"<a"[ \t\n\r]*            { return OPEN_A; }
-"</a>"          { return CLOSE_A; }
+<INITIAL>"<a"[ \t\n\r]*        { BEGIN(IN_TAG); return OPEN_A; }
+<INITIAL>"</a>"                { return CLOSE_A; }
 
-"<img"[ \t\n\r]*          { return OPEN_IMG; }
+<INITIAL>"<img"[ \t\n\r]*     { BEGIN(IN_TAG); return OPEN_IMG; }
 
-"<form"[ \t\n\r]*        { return OPEN_FORM; }
-"</form>"       { return CLOSE_FORM; }
+<INITIAL>"<form"[ \t\n\r]*     { BEGIN(IN_TAG); return OPEN_FORM; }
+<INITIAL>"</form>"             { return CLOSE_FORM; }
 
-"<input"[ \t\n\r]*        { return OPEN_INPUT; }
+<INITIAL>"<input"[ \t\n\r]*    { BEGIN(IN_TAG); return OPEN_INPUT; }
 
-"<label"[ \t\n\r]*        { return OPEN_LABEL; }
-"</label>"      { return CLOSE_LABEL; }
+<INITIAL>"<label"[ \t\n\r]*    { BEGIN(IN_TAG); return OPEN_LABEL; }
+<INITIAL>"</label>"            { return CLOSE_LABEL; }
 
-"<div"[ \t\n\r]*          { return OPEN_DIV; }
-"</div>"        { return CLOSE_DIV; }
+<INITIAL>"<div"[ \t\n\r]*      { BEGIN(IN_TAG); return OPEN_DIV; }
+<INITIAL>"</div>"              { return CLOSE_DIV; }
 
-">"             { return TAG_CLOSE; }
+<IN_TAG>">"                    { BEGIN(INITIAL); return TAG_CLOSE; }
+<IN_TAG>"="                    { return EQUALS; }
 
-
-"id"              { return ID_ATTR; }
-"style"           { return STYLE_ATTR; }
-"href"            { return HREF_ATTR; }
-"src"             { return SRC_ATTR; }
-"alt"             { return ALT_ATTR; }
-"width"           { return WIDTH_ATTR; }
-"height"          { return HEIGHT_ATTR; }
-"type"            { return TYPE_ATTR; }
-"value"           { return VALUE_ATTR; }
-"for"             { return FOR_ATTR; }
-"name"            { return NAME_ATTR; }
-"content"         { return CONTENT_ATTR; }
-"charset"         { return CHARSET_ATTR; }
+<IN_TAG>"id"              { return ID_ATTR; }
+<IN_TAG>"style"           { return STYLE_ATTR; }
+<IN_TAG>"href"            { return HREF_ATTR; }
+<IN_TAG>"src"             { return SRC_ATTR; }
+<IN_TAG>"alt"             { return ALT_ATTR; }
+<IN_TAG>"width"           { return WIDTH_ATTR; }
+<IN_TAG>"height"          { return HEIGHT_ATTR; }
+<IN_TAG>"type"            { return TYPE_ATTR; }
+<IN_TAG>"value"           { return VALUE_ATTR; }
+<IN_TAG>"for"             { return FOR_ATTR; }
+<IN_TAG>"name"            { return NAME_ATTR; }
+<IN_TAG>"content"         { return CONTENT_ATTR; }
+<IN_TAG>"charset"         { return CHARSET_ATTR; }
 
 
-\"[^\"]*\"      {
+<IN_TAG>\"[^\"]*\"      {
     yylval.str = strdup(yytext + 1);
     yylval.str[strlen(yylval.str) - 1] = 0;  
     return QUOTED_STRING;
 }
 
-\'[^\']*\'      {
+<IN_TAG>\'[^\']*\'      {
     yylval.str = strdup(yytext + 1);
     yylval.str[strlen(yylval.str) - 1] = 0;
     return QUOTED_STRING;
 }
 
-[0-9]+          {
+<IN_TAG>[0-9]+          {
     yylval.num = atoi(yytext);
     return NUMBER;
 }
@@ -80,8 +81,8 @@ extern int yylineno;
 \n { yylineno++;}; 
 [ \t\r]+ ;
 
-">"[\n]+[^<]+   {
-    printf("OK ");
+<INITIAL>[^<>\n]+   {
+    printf("OK \n");
     yylval.str = strdup(yytext);
     return TEXT;
 }

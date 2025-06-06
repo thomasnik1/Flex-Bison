@@ -48,7 +48,7 @@ int input_id_exists(const char* id) {
 }
 
 int is_valid_url(const char* url) {
-    const char* pattern = "^(https?://|/|\\.\\.?/|#)[^\\s]*$";
+    const char* pattern = "^[^[:space:]]+$";
     regex_t regex;
     int reti = regcomp(&regex, pattern, REG_EXTENDED);
     if (reti) return 0;
@@ -163,7 +163,7 @@ meta_list:
 ;
 
 meta:
-    OPEN_META attr_list TEXT
+    OPEN_META attr_list TAG_CLOSE
 ;
 
 body:
@@ -181,20 +181,20 @@ body_elements:
 ;
 
 element:
-    paragraph | anchor | image | form | division | comment
+    paragraph | anchor | image | form | division | comment 
 ;
 
 paragraph:
-    OPEN_P attr_list_opt TEXT CLOSE_P
+    OPEN_P attr_list_opt TAG_CLOSE TEXT CLOSE_P
 ;
 
 anchor:
-    OPEN_A attr_list anchor_content CLOSE_A
+    OPEN_A attr_list TAG_CLOSE anchor_content CLOSE_A
 ;
 
 anchor_content:
-    TEXT
-    | image
+    TEXT image
+    |image
 ;
 
 image:
