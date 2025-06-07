@@ -21,4 +21,4 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "✅ Build successful. Run with: ./parser final_example.myhtml"
+echo "Build successful. Run with: ./parser final_example.myhtml"

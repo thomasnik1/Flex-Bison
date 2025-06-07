@@ -4,13 +4,14 @@
 #include <stdlib.h>
 
 extern int yylineno;
+extern void yyerror(const char *err);
+char str_buf[200];
 %}
 
 %x IN_TAG 
+%x COMMENT
 
 %%
-
-<INITIAL>"<!--"([^><-]|(-[^->])|(\n))*"-->"   { return COMMENT; }
 
 <INITIAL>"<MYHTML>"      { return OPEN_MYHTML; }
 <INITIAL>"</MYHTML>"     { return CLOSE_MYHTML; }
@@ -85,6 +86,11 @@ extern int yylineno;
     yylval.str = strdup(yytext);
     return TEXT;
 }
+
+"<!--"              {printf("\nComment found in line %d.\n",yylineno); strcpy(str_buf,""); BEGIN(COMMENT);}
+<COMMENT>"-->"      {BEGIN(INITIAL); printf("%s\n\n",str_buf); }
+<COMMENT>"--"       {yyerror("Comment has -- without >");}
+<COMMENT>.          {strcat(str_buf,yytext);}
 
 .               {
     fprintf(stderr, "Unknown character: %s (line %d)\n", yytext, yylineno);

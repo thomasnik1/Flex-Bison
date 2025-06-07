@@ -92,9 +92,8 @@ extern int yydebug;
     CONTENT_ATTR = 293,            /* CONTENT_ATTR  */
     CHARSET_ATTR = 294,            /* CHARSET_ATTR  */
     TAG_CLOSE = 295,               /* TAG_CLOSE  */
-    COMMENT = 296,                 /* COMMENT  */
-    ERROR = 297,                   /* ERROR  */
-    EQUALS = 298                   /* EQUALS  */
+    ERROR = 296,                   /* ERROR  */
+    EQUALS = 297                   /* EQUALS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -108,7 +107,7 @@ union YYSTYPE
     char* str;
     int num;
 
-#line 112 "bison.tab.h"
+#line 111 "bison.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

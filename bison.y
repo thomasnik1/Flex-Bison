@@ -120,8 +120,7 @@ void yyerror(const char *err) {
 %token OPEN_LABEL CLOSE_LABEL
 %token OPEN_DIV CLOSE_DIV
 %token ID_ATTR STYLE_ATTR HREF_ATTR SRC_ATTR ALT_ATTR WIDTH_ATTR HEIGHT_ATTR TYPE_ATTR VALUE_ATTR FOR_ATTR NAME_ATTR CONTENT_ATTR CHARSET_ATTR
-%token TAG_CLOSE 
-%token COMMENT
+%token TAG_CLOSE
 %token ERROR
 %token EQUALS
 
@@ -182,7 +181,7 @@ body_elements:
 ;
 
 element:
-    paragraph | anchor | image | form | division | comment 
+    paragraph | anchor | image | form | division 
 ;
 
 paragraph:
@@ -225,10 +224,6 @@ label:
 
 division:
     OPEN_DIV {printf("<div ");} attr_list_opt TAG_CLOSE {printf(">\n");} body_elements_opt CLOSE_DIV {printf("</div>\n");}
-;
-
-comment:
-    COMMENT
 ;
 
 attr_list_opt:
