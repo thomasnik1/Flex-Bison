@@ -92,8 +92,13 @@ int element_count = 0;
 char* input_ids[100];
 int input_id_count = 0;
 
+char* label_for[100];
+int label_for_count = 0;
+
 int submit_input_count = 0;
 int last_input_line = 0;
+
+int input_flag = 0;
 
 int is_unique_id(const char* id) {
     for (int i = 0; i < element_count; i++) {
@@ -108,6 +113,19 @@ void add_element_id(const char* id) {
 
 void add_input_id(const char* id) {
     input_ids[input_id_count++] = strdup(id);
+}
+
+void add_label_for(const char* for_id){
+    label_for[label_for_count] = strdup(for_id);
+    label_for_count++;
+}
+
+int match_for_id(const char *id){
+    for (int i = 0; i < label_for_count; i++){
+        if (strcmp(label_for[i], id) == 0){
+            return 1;
+        }
+    }
 }
 
 int input_id_exists(const char* id) {
@@ -170,7 +188,7 @@ void yyerror(const char *err) {
     fprintf(stderr, "Error (line %d): %s at symbol '%s'\n", yylineno, err, yytext);
 }
 
-#line 174 "bison.tab.c"
+#line 192 "bison.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -700,18 +718,18 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,   130,   130,   130,   134,   136,   136,   140,   140,   140,
-     149,   151,   155,   155,   159,   159,   163,   165,   169,   169,
-     169,   169,   169,   173,   173,   173,   173,   177,   177,   177,
-     181,   181,   182,   186,   186,   190,   190,   190,   194,   195,
-     199,   199,   203,   203,   207,   207,   207,   207,   211,   211,
-     211,   214,   216,   220,   220,   220,   220,   227,   227,   227,
-     230,   230,   230,   230,   233,   233,   233,   233,   236,   236,
-     236,   244,   244,   244,   244,   247,   247,   247,   248,   248,
-     248,   249,   249,   249,   250,   250,   250,   251,   251,   251,
-     252,   252,   252,   253,   253,   253
+       0,   148,   148,   148,   152,   154,   154,   158,   158,   158,
+     167,   169,   173,   173,   177,   177,   181,   183,   187,   187,
+     187,   187,   187,   191,   191,   191,   191,   195,   195,   195,
+     199,   199,   200,   204,   204,   208,   208,   208,   212,   213,
+     217,   217,   221,   221,   225,   225,   225,   225,   229,   229,
+     229,   232,   234,   238,   238,   238,   238,   249,   249,   249,
+     252,   252,   252,   252,   255,   255,   255,   255,   258,   258,
+     258,   266,   266,   266,   266,   269,   269,   269,   270,   270,
+     270,   271,   271,   271,   272,   272,   272,   273,   273,   273,
+     274,   274,   274,   275,   275,   275
 };
 #endif
 
@@ -1397,324 +1415,328 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* $@1: %empty  */
-#line 130 "bison.y"
+#line 148 "bison.y"
                 {printf("<MYHTML>\n");}
-#line 1403 "bison.tab.c"
-    break;
-
-  case 3: /* myhtml: OPEN_MYHTML $@1 head body CLOSE_MYHTML  */
-#line 130 "bison.y"
-                                                               { printf("</MYHTML>\nValid myHTML document.\n"); }
-#line 1409 "bison.tab.c"
-    break;
-
-  case 5: /* $@2: %empty  */
-#line 136 "bison.y"
-                {printf("<head>\n");}
-#line 1415 "bison.tab.c"
-    break;
-
-  case 6: /* head: OPEN_HEAD $@2 title meta_list CLOSE_HEAD  */
-#line 136 "bison.y"
-                                                                 {printf("</head>\n");}
 #line 1421 "bison.tab.c"
     break;
 
-  case 7: /* $@3: %empty  */
-#line 140 "bison.y"
-               {printf("<title>");}
+  case 3: /* myhtml: OPEN_MYHTML $@1 head body CLOSE_MYHTML  */
+#line 148 "bison.y"
+                                                               { printf("</MYHTML>\nValid myHTML document.\n"); }
 #line 1427 "bison.tab.c"
     break;
 
-  case 8: /* $@4: %empty  */
-#line 140 "bison.y"
-                                          {printf("%s",yylval.str);}
+  case 5: /* $@2: %empty  */
+#line 154 "bison.y"
+                {printf("<head>\n");}
 #line 1433 "bison.tab.c"
     break;
 
+  case 6: /* head: OPEN_HEAD $@2 title meta_list CLOSE_HEAD  */
+#line 154 "bison.y"
+                                                                 {printf("</head>\n");}
+#line 1439 "bison.tab.c"
+    break;
+
+  case 7: /* $@3: %empty  */
+#line 158 "bison.y"
+               {printf("<title>");}
+#line 1445 "bison.tab.c"
+    break;
+
+  case 8: /* $@4: %empty  */
+#line 158 "bison.y"
+                                          {printf("%s",yylval.str);}
+#line 1451 "bison.tab.c"
+    break;
+
   case 9: /* title: OPEN_TITLE $@3 TEXT $@4 CLOSE_TITLE  */
-#line 140 "bison.y"
+#line 158 "bison.y"
                                                                                  {
         if (strlen((yyvsp[-2].str)) > MAX_TITLE_LEN) {
             yyerror("Title exceeds 60 characters");
         }
         else printf("</title>\n");
     }
-#line 1444 "bison.tab.c"
-    break;
-
-  case 12: /* $@5: %empty  */
-#line 155 "bison.y"
-              {printf("<meta ");}
-#line 1450 "bison.tab.c"
-    break;
-
-  case 13: /* meta: OPEN_META $@5 attr_list TAG_CLOSE  */
-#line 155 "bison.y"
-                                                      {printf(">\n");}
-#line 1456 "bison.tab.c"
-    break;
-
-  case 14: /* $@6: %empty  */
-#line 159 "bison.y"
-              {printf("<body>\n");}
 #line 1462 "bison.tab.c"
     break;
 
-  case 15: /* body: OPEN_BODY $@6 body_elements CLOSE_BODY  */
-#line 159 "bison.y"
-                                                             {printf("</body>\n");}
+  case 12: /* $@5: %empty  */
+#line 173 "bison.y"
+              {printf("<meta ");}
 #line 1468 "bison.tab.c"
     break;
 
-  case 23: /* $@7: %empty  */
+  case 13: /* meta: OPEN_META $@5 attr_list TAG_CLOSE  */
 #line 173 "bison.y"
-           {printf("<p ");}
+                                                      {printf(">\n");}
 #line 1474 "bison.tab.c"
     break;
 
-  case 24: /* $@8: %empty  */
-#line 173 "bison.y"
-                                                {printf(">\n");}
+  case 14: /* $@6: %empty  */
+#line 177 "bison.y"
+              {printf("<body>\n");}
 #line 1480 "bison.tab.c"
     break;
 
-  case 25: /* $@9: %empty  */
-#line 173 "bison.y"
-                                                                      {printf("%s",yylval.str);}
+  case 15: /* body: OPEN_BODY $@6 body_elements CLOSE_BODY  */
+#line 177 "bison.y"
+                                                             {printf("</body>\n");}
 #line 1486 "bison.tab.c"
     break;
 
-  case 26: /* paragraph: OPEN_P $@7 attr_list TAG_CLOSE $@8 TEXT $@9 CLOSE_P  */
-#line 173 "bison.y"
-                                                                                                         {printf("</p>\n");}
+  case 23: /* $@7: %empty  */
+#line 191 "bison.y"
+           {printf("<p ");}
 #line 1492 "bison.tab.c"
     break;
 
-  case 27: /* $@10: %empty  */
-#line 177 "bison.y"
-           {printf("<a ");}
+  case 24: /* $@8: %empty  */
+#line 191 "bison.y"
+                                                {printf(">\n");}
 #line 1498 "bison.tab.c"
     break;
 
-  case 28: /* $@11: %empty  */
-#line 177 "bison.y"
-                                                {printf(">\n");}
+  case 25: /* $@9: %empty  */
+#line 191 "bison.y"
+                                                                      {printf("%s",yylval.str);}
 #line 1504 "bison.tab.c"
     break;
 
-  case 29: /* anchor: OPEN_A $@10 attr_list TAG_CLOSE $@11 anchor_content CLOSE_A  */
-#line 177 "bison.y"
-                                                                                        {printf("</a>\n");}
+  case 26: /* paragraph: OPEN_P $@7 attr_list TAG_CLOSE $@8 TEXT $@9 CLOSE_P  */
+#line 191 "bison.y"
+                                                                                                         {printf("</p>\n");}
 #line 1510 "bison.tab.c"
     break;
 
-  case 30: /* $@12: %empty  */
-#line 181 "bison.y"
-         {printf("%s",yylval.str);}
+  case 27: /* $@10: %empty  */
+#line 195 "bison.y"
+           {printf("<a ");}
 #line 1516 "bison.tab.c"
     break;
 
-  case 33: /* $@13: %empty  */
-#line 186 "bison.y"
-             {printf("<img ");}
+  case 28: /* $@11: %empty  */
+#line 195 "bison.y"
+                                                {printf(">\n");}
 #line 1522 "bison.tab.c"
     break;
 
-  case 34: /* image: OPEN_IMG $@13 attr_list TAG_CLOSE  */
-#line 186 "bison.y"
-                                                    {printf(">\n");}
+  case 29: /* anchor: OPEN_A $@10 attr_list TAG_CLOSE $@11 anchor_content CLOSE_A  */
+#line 195 "bison.y"
+                                                                                        {printf("</a>\n");}
 #line 1528 "bison.tab.c"
     break;
 
-  case 35: /* $@14: %empty  */
-#line 190 "bison.y"
-              {printf("<form ");}
+  case 30: /* $@12: %empty  */
+#line 199 "bison.y"
+         {printf("%s",yylval.str);}
 #line 1534 "bison.tab.c"
     break;
 
-  case 36: /* $@15: %empty  */
-#line 190 "bison.y"
-                                                      {printf(">\n");}
+  case 33: /* $@13: %empty  */
+#line 204 "bison.y"
+             {printf("<img ");}
 #line 1540 "bison.tab.c"
     break;
 
-  case 37: /* form: OPEN_FORM $@14 attr_list TAG_CLOSE $@15 form_content CLOSE_FORM  */
-#line 190 "bison.y"
-                                                                                               {printf("</form>\n");}
+  case 34: /* image: OPEN_IMG $@13 attr_list TAG_CLOSE  */
+#line 204 "bison.y"
+                                                    {printf(">\n");}
 #line 1546 "bison.tab.c"
     break;
 
-  case 42: /* $@16: %empty  */
-#line 203 "bison.y"
-               {printf("<input ");}
+  case 35: /* $@14: %empty  */
+#line 208 "bison.y"
+              {printf("<form ");}
 #line 1552 "bison.tab.c"
     break;
 
-  case 43: /* input: OPEN_INPUT $@16 attr_list TAG_CLOSE  */
-#line 203 "bison.y"
-                                                        {printf(">\n");}
+  case 36: /* $@15: %empty  */
+#line 208 "bison.y"
+                                                      {printf(">\n");}
 #line 1558 "bison.tab.c"
     break;
 
-  case 44: /* $@17: %empty  */
-#line 207 "bison.y"
-                {printf("<label ");}
+  case 37: /* form: OPEN_FORM $@14 attr_list TAG_CLOSE $@15 form_content CLOSE_FORM  */
+#line 208 "bison.y"
+                                                                                               {printf("</form>\n");}
 #line 1564 "bison.tab.c"
     break;
 
-  case 45: /* $@18: %empty  */
-#line 207 "bison.y"
-                                                        {printf(">\n");}
+  case 42: /* $@16: %empty  */
+#line 221 "bison.y"
+               {printf("<input "); input_flag = 1;}
 #line 1570 "bison.tab.c"
     break;
 
-  case 46: /* $@19: %empty  */
-#line 207 "bison.y"
-                                                                              {printf("%s",yylval.str);}
+  case 43: /* input: OPEN_INPUT $@16 attr_list TAG_CLOSE  */
+#line 221 "bison.y"
+                                                                        {printf(">\n");}
 #line 1576 "bison.tab.c"
     break;
 
-  case 47: /* label: OPEN_LABEL $@17 attr_list TAG_CLOSE $@18 TEXT $@19 CLOSE_LABEL  */
-#line 207 "bison.y"
-                                                                                                                     {printf("</label>\n");}
+  case 44: /* $@17: %empty  */
+#line 225 "bison.y"
+                {printf("<label ");}
 #line 1582 "bison.tab.c"
     break;
 
-  case 48: /* $@20: %empty  */
-#line 211 "bison.y"
-             {printf("<div ");}
+  case 45: /* $@18: %empty  */
+#line 225 "bison.y"
+                                                        {printf(">\n");}
 #line 1588 "bison.tab.c"
     break;
 
-  case 49: /* $@21: %empty  */
-#line 211 "bison.y"
-                                                    {printf(">\n");}
+  case 46: /* $@19: %empty  */
+#line 225 "bison.y"
+                                                                              {printf("%s",yylval.str);}
 #line 1594 "bison.tab.c"
     break;
 
-  case 50: /* division: OPEN_DIV $@20 attr_list TAG_CLOSE $@21 body_elements CLOSE_DIV  */
-#line 211 "bison.y"
-                                                                                             {printf("</div>\n");}
+  case 47: /* label: OPEN_LABEL $@17 attr_list TAG_CLOSE $@18 TEXT $@19 CLOSE_LABEL  */
+#line 225 "bison.y"
+                                                                                                                     {printf("\n</label>\n");}
 #line 1600 "bison.tab.c"
     break;
 
-  case 53: /* $@22: %empty  */
-#line 220 "bison.y"
-            {printf("id");}
+  case 48: /* $@20: %empty  */
+#line 229 "bison.y"
+             {printf("<div ");}
 #line 1606 "bison.tab.c"
     break;
 
-  case 54: /* $@23: %empty  */
-#line 220 "bison.y"
-                                   {printf("=");}
+  case 49: /* $@21: %empty  */
+#line 229 "bison.y"
+                                                    {printf(">\n");}
 #line 1612 "bison.tab.c"
     break;
 
-  case 55: /* $@24: %empty  */
-#line 220 "bison.y"
-                                                                {printf("\"%s\"",yylval.str);}
+  case 50: /* division: OPEN_DIV $@20 attr_list TAG_CLOSE $@21 body_elements CLOSE_DIV  */
+#line 229 "bison.y"
+                                                                                             {printf("</div>\n");}
 #line 1618 "bison.tab.c"
     break;
 
+  case 53: /* $@22: %empty  */
+#line 238 "bison.y"
+            {printf("id");}
+#line 1624 "bison.tab.c"
+    break;
+
+  case 54: /* $@23: %empty  */
+#line 238 "bison.y"
+                                   {printf("=");}
+#line 1630 "bison.tab.c"
+    break;
+
+  case 55: /* $@24: %empty  */
+#line 238 "bison.y"
+                                                                {printf("\"%s\"",yylval.str);}
+#line 1636 "bison.tab.c"
+    break;
+
   case 56: /* attribute: ID_ATTR $@22 EQUALS $@23 QUOTED_STRING $@24  */
-#line 220 "bison.y"
+#line 238 "bison.y"
                                                                                               {
         if (!is_unique_id((yyvsp[-1].str))) yyerror("Duplicate ID");
+        else if(input_flag == 1){
+            if(match_for_id((yyvsp[-1].str))) yyerror("unmatched label");
+            input_flag = 0;
+        }
         else {
             add_element_id((yyvsp[-1].str));
             add_input_id((yyvsp[-1].str));
         }
     }
-#line 1630 "bison.tab.c"
+#line 1652 "bison.tab.c"
     break;
 
   case 57: /* $@25: %empty  */
-#line 227 "bison.y"
+#line 249 "bison.y"
                  {printf("style");}
-#line 1636 "bison.tab.c"
+#line 1658 "bison.tab.c"
     break;
 
   case 58: /* $@26: %empty  */
-#line 227 "bison.y"
+#line 249 "bison.y"
                                            {printf("=");}
-#line 1642 "bison.tab.c"
+#line 1664 "bison.tab.c"
     break;
 
   case 59: /* attribute: STYLE_ATTR $@25 EQUALS $@26 QUOTED_STRING  */
-#line 227 "bison.y"
+#line 249 "bison.y"
                                                                         {{printf("\"%s\"",yylval.str);}
         if (!is_valid_style((yyvsp[0].str))) yyerror("Invalid style attribute");
     }
-#line 1650 "bison.tab.c"
+#line 1672 "bison.tab.c"
     break;
 
   case 60: /* $@27: %empty  */
-#line 230 "bison.y"
+#line 252 "bison.y"
                 {printf("href");}
-#line 1656 "bison.tab.c"
+#line 1678 "bison.tab.c"
     break;
 
   case 61: /* $@28: %empty  */
-#line 230 "bison.y"
+#line 252 "bison.y"
                                          {printf("=");}
-#line 1662 "bison.tab.c"
+#line 1684 "bison.tab.c"
     break;
 
   case 62: /* $@29: %empty  */
-#line 230 "bison.y"
+#line 252 "bison.y"
                                                                       {printf("\"%s\"",yylval.str);}
-#line 1668 "bison.tab.c"
+#line 1690 "bison.tab.c"
     break;
 
   case 63: /* attribute: HREF_ATTR $@27 EQUALS $@28 QUOTED_STRING $@29  */
-#line 230 "bison.y"
+#line 252 "bison.y"
                                                                                                     {
         if (!is_valid_url((yyvsp[-1].str))) yyerror("Invalid href URL");
     }
-#line 1676 "bison.tab.c"
+#line 1698 "bison.tab.c"
     break;
 
   case 64: /* $@30: %empty  */
-#line 233 "bison.y"
+#line 255 "bison.y"
                {printf("src");}
-#line 1682 "bison.tab.c"
+#line 1704 "bison.tab.c"
     break;
 
   case 65: /* $@31: %empty  */
-#line 233 "bison.y"
+#line 255 "bison.y"
                                        {printf("=");}
-#line 1688 "bison.tab.c"
+#line 1710 "bison.tab.c"
     break;
 
   case 66: /* $@32: %empty  */
-#line 233 "bison.y"
+#line 255 "bison.y"
                                                                     {printf("\"%s\"",yylval.str);}
-#line 1694 "bison.tab.c"
+#line 1716 "bison.tab.c"
     break;
 
   case 67: /* attribute: SRC_ATTR $@30 EQUALS $@31 QUOTED_STRING $@32  */
-#line 233 "bison.y"
+#line 255 "bison.y"
                                                                                                   {
         if (!is_valid_url((yyvsp[-1].str))) yyerror("Invalid src URL");
     }
-#line 1702 "bison.tab.c"
+#line 1724 "bison.tab.c"
     break;
 
   case 68: /* $@33: %empty  */
-#line 236 "bison.y"
+#line 258 "bison.y"
                 {printf("type");}
-#line 1708 "bison.tab.c"
+#line 1730 "bison.tab.c"
     break;
 
   case 69: /* $@34: %empty  */
-#line 236 "bison.y"
+#line 258 "bison.y"
                                          {printf("=");}
-#line 1714 "bison.tab.c"
+#line 1736 "bison.tab.c"
     break;
 
   case 70: /* attribute: TYPE_ATTR $@33 EQUALS $@34 QUOTED_STRING  */
-#line 236 "bison.y"
+#line 258 "bison.y"
                                                                       {{printf("\"%s\"",yylval.str);}
         if (strcmp((yyvsp[0].str), "submit") == 0) {
             submit_input_count++;
@@ -1723,163 +1745,163 @@ yyreduce:
             yyerror("Invalid type attribute");
         }
     }
-#line 1727 "bison.tab.c"
+#line 1749 "bison.tab.c"
     break;
 
   case 71: /* $@35: %empty  */
-#line 244 "bison.y"
+#line 266 "bison.y"
                {printf("for");}
-#line 1733 "bison.tab.c"
+#line 1755 "bison.tab.c"
     break;
 
   case 72: /* $@36: %empty  */
-#line 244 "bison.y"
+#line 266 "bison.y"
                                        {printf("=");}
-#line 1739 "bison.tab.c"
+#line 1761 "bison.tab.c"
     break;
 
   case 73: /* $@37: %empty  */
-#line 244 "bison.y"
+#line 266 "bison.y"
                                                                     {printf("\"%s\"",yylval.str);}
-#line 1745 "bison.tab.c"
+#line 1767 "bison.tab.c"
     break;
 
   case 74: /* attribute: FOR_ATTR $@35 EQUALS $@36 QUOTED_STRING $@37  */
-#line 244 "bison.y"
+#line 266 "bison.y"
                                                                                                   {
-        if (!input_id_exists((yyvsp[-1].str))) yyerror("'for' must reference a valid input id");
+        add_label_for((yyvsp[-1].str));
     }
-#line 1753 "bison.tab.c"
+#line 1775 "bison.tab.c"
     break;
 
   case 75: /* $@38: %empty  */
-#line 247 "bison.y"
+#line 269 "bison.y"
                 {printf("name");}
-#line 1759 "bison.tab.c"
+#line 1781 "bison.tab.c"
     break;
 
   case 76: /* $@39: %empty  */
-#line 247 "bison.y"
+#line 269 "bison.y"
                                          {printf("=");}
-#line 1765 "bison.tab.c"
+#line 1787 "bison.tab.c"
     break;
 
   case 77: /* attribute: NAME_ATTR $@38 EQUALS $@39 QUOTED_STRING  */
-#line 247 "bison.y"
+#line 269 "bison.y"
                                                                       {printf("\"%s\"",yylval.str);}
-#line 1771 "bison.tab.c"
+#line 1793 "bison.tab.c"
     break;
 
   case 78: /* $@40: %empty  */
-#line 248 "bison.y"
+#line 270 "bison.y"
                  {printf("value");}
-#line 1777 "bison.tab.c"
+#line 1799 "bison.tab.c"
     break;
 
   case 79: /* $@41: %empty  */
-#line 248 "bison.y"
+#line 270 "bison.y"
                                            {printf("=");}
-#line 1783 "bison.tab.c"
+#line 1805 "bison.tab.c"
     break;
 
   case 80: /* attribute: VALUE_ATTR $@40 EQUALS $@41 QUOTED_STRING  */
-#line 248 "bison.y"
+#line 270 "bison.y"
                                                                         {printf("\"%s\"",yylval.str);}
-#line 1789 "bison.tab.c"
+#line 1811 "bison.tab.c"
     break;
 
   case 81: /* $@42: %empty  */
-#line 249 "bison.y"
+#line 271 "bison.y"
                 {printf("alt");}
-#line 1795 "bison.tab.c"
+#line 1817 "bison.tab.c"
     break;
 
   case 82: /* $@43: %empty  */
-#line 249 "bison.y"
+#line 271 "bison.y"
                                        {printf("=");}
-#line 1801 "bison.tab.c"
+#line 1823 "bison.tab.c"
     break;
 
   case 83: /* attribute: ALT_ATTR $@42 EQUALS $@43 QUOTED_STRING  */
-#line 249 "bison.y"
+#line 271 "bison.y"
                                                                     {printf("\"%s\"",yylval.str);}
-#line 1807 "bison.tab.c"
+#line 1829 "bison.tab.c"
     break;
 
   case 84: /* $@44: %empty  */
-#line 250 "bison.y"
+#line 272 "bison.y"
                  {printf("width");}
-#line 1813 "bison.tab.c"
+#line 1835 "bison.tab.c"
     break;
 
   case 85: /* $@45: %empty  */
-#line 250 "bison.y"
+#line 272 "bison.y"
                                            {printf("=");}
-#line 1819 "bison.tab.c"
+#line 1841 "bison.tab.c"
     break;
 
   case 86: /* attribute: WIDTH_ATTR $@44 EQUALS $@45 NUMBER  */
-#line 250 "bison.y"
+#line 272 "bison.y"
                                                                  {printf("%d",yylval.num);}
-#line 1825 "bison.tab.c"
+#line 1847 "bison.tab.c"
     break;
 
   case 87: /* $@46: %empty  */
-#line 251 "bison.y"
+#line 273 "bison.y"
                   {printf("height");}
-#line 1831 "bison.tab.c"
+#line 1853 "bison.tab.c"
     break;
 
   case 88: /* $@47: %empty  */
-#line 251 "bison.y"
+#line 273 "bison.y"
                                              {printf("=");}
-#line 1837 "bison.tab.c"
+#line 1859 "bison.tab.c"
     break;
 
   case 89: /* attribute: HEIGHT_ATTR $@46 EQUALS $@47 NUMBER  */
-#line 251 "bison.y"
+#line 273 "bison.y"
                                                                    {printf("%d",yylval.num);}
-#line 1843 "bison.tab.c"
+#line 1865 "bison.tab.c"
     break;
 
   case 90: /* $@48: %empty  */
-#line 252 "bison.y"
+#line 274 "bison.y"
                    {printf("content");}
-#line 1849 "bison.tab.c"
+#line 1871 "bison.tab.c"
     break;
 
   case 91: /* $@49: %empty  */
-#line 252 "bison.y"
+#line 274 "bison.y"
                                                {printf("=");}
-#line 1855 "bison.tab.c"
+#line 1877 "bison.tab.c"
     break;
 
   case 92: /* attribute: CONTENT_ATTR $@48 EQUALS $@49 QUOTED_STRING  */
-#line 252 "bison.y"
+#line 274 "bison.y"
                                                                             {printf("\"%s\"",yylval.str);}
-#line 1861 "bison.tab.c"
+#line 1883 "bison.tab.c"
     break;
 
   case 93: /* $@50: %empty  */
-#line 253 "bison.y"
+#line 275 "bison.y"
                    {printf("charset");}
-#line 1867 "bison.tab.c"
+#line 1889 "bison.tab.c"
     break;
 
   case 94: /* $@51: %empty  */
-#line 253 "bison.y"
+#line 275 "bison.y"
                                               {printf("=");}
-#line 1873 "bison.tab.c"
+#line 1895 "bison.tab.c"
     break;
 
   case 95: /* attribute: CHARSET_ATTR $@50 EQUALS $@51 QUOTED_STRING  */
-#line 253 "bison.y"
+#line 275 "bison.y"
                                                                           {printf("\"%s\"",yylval.str);}
-#line 1879 "bison.tab.c"
+#line 1901 "bison.tab.c"
     break;
 
 
-#line 1883 "bison.tab.c"
+#line 1905 "bison.tab.c"
 
       default: break;
     }
@@ -2072,7 +2094,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 256 "bison.y"
+#line 278 "bison.y"
 
 
 int main(int argc, char **argv){
