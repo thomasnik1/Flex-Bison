@@ -9,7 +9,7 @@
 <body>
     <p id="par1">This is my project.</p>
 
-    <div id="div1" style="color:blue">
+    <div id="div1" style="color:ble; background_color:red; font_size:50cfj;">
         <a id="hyper" href="https://arxes.ceid.gr">
             Here comes an image.
             <img src="image.jpg" id="myimg123" alt="Example Image">
@@ -21,7 +21,7 @@
         <input type="text" id="name">
         <label id="label2" for="lastname">Last Name:</label>
         <input type="text" id="lastname">
-        <input id="submit" type="submit" value='Submit "it"'>
+        <input id="submit" type="submit" value='Submit "it" '>
     </form>
 
 </body>

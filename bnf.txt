@@ -1,0 +1,69 @@
+<myhtml> ::= "<MYHTML>" <head> <body> "</MYHTML>"
+
+<head> ::= "" 
+    | "<head>" <title> <meta_list> "</head>"
+
+<title> ::= "<title>" <text> "</title>"
+
+<meta_list> ::= "" 
+    | <meta_list> <meta>
+
+<meta> ::= "<meta" <attr_list> ">"
+
+<body> ::= "<body>" <body_elements> "</body>"
+
+<body_elements> ::= "" 
+    | <body_elements> <element>
+
+<element> ::= <paragraph> | <anchor> | <image> | <form> | <division>
+
+<paragraph> ::= "<p" <attr_list> ">" <text> "</p>"
+
+<anchor> ::= "<a" attr_list ">" <anchor_content> "</a>"
+
+<anchor_content> ::= <text> <image>
+    | <image>
+
+<image> ::= "<img" <attr_list> ">"
+
+<form> ::= "<form" <attr_list> ">" <form_content> "</form>"
+
+<form_content> ::= <form_element>
+    | <form_content> <form_element>
+
+<form_element> ::= <input> | <label>
+
+<input> ::= "<input" <attr_list> "</input>"
+
+<label> ::= "<label>" <attr_list> ">" <text> "</label>"
+
+<division> ::= "<div" <attr_list> ">" <body_elements> "</div>"
+
+<attr_list> ::= ""
+    | <attr_list> <attribute>
+
+<attribute> :: "id=" <quoted_string>
+    | "style=" <quoted_string>
+    | "href=" <quoted_string>
+    | "src=" <quoted_string>
+    | "type=" <quoted_string>
+    | "for=" <quoted_string>
+    | "name=" <quoted_string>
+    | "value=" <quoted_string>
+    | "alt=" <quoted_string>
+    | "width=" <number>
+    | "height=" <number>
+    | "content=" <quoted_string>
+    | "charset=" <quoted_string>
+
+<text> ::= <alnum_seq>
+
+<alnum_seq> ::= <alnum>
+    | <alnum> <alnum_seq>
+
+<alnum> ::= "a" | ... | "z" | "A" | ... | "Z" | "0" | ... | "9" 
+
+<quoted_string> ::= """ <text> """
+    | "'" <text> "'"
+
+<number> ::= "0" | ... | "9"

@@ -126,21 +126,14 @@ void yyerror(const char *err) {
 
 %%
 
-program:
-    OPEN_MYHTML {printf("<MYHTML>\n");} content CLOSE_MYHTML { printf("</MYHTML>\nValid myHTML document.\n"); }
+myhtml:
+    OPEN_MYHTML {printf("<MYHTML>\n");} head body CLOSE_MYHTML { printf("</MYHTML>\nValid myHTML document.\n"); }
 ;
 
-content:
-    head_opt body
-;
-
-head_opt:
-    /* empty */
-    | head
-;
 
 head:
-    OPEN_HEAD {printf("<head>\n");} title meta_opt CLOSE_HEAD {printf("</head>\n");}
+    /* empty */
+    | OPEN_HEAD {printf("<head>\n");} title meta_list CLOSE_HEAD {printf("</head>\n");}
 ;
 
 title:
@@ -152,13 +145,9 @@ title:
     }
 ;
 
-meta_opt:
-    /* empty */
-    | meta_list
-;
 
 meta_list:
-    meta
+    /* empty */
     | meta_list meta
 ;
 
@@ -167,16 +156,12 @@ meta:
 ;
 
 body:
-    OPEN_BODY {printf("<body>\n");} body_elements_opt CLOSE_BODY {printf("</body>\n");}
+    OPEN_BODY {printf("<body>\n");} body_elements CLOSE_BODY {printf("</body>\n");}
 ;
 
-body_elements_opt:
-    /* empty */
-    | body_elements
-;
 
 body_elements:
-    element
+    /* empty */
     | body_elements element
 ;
 
@@ -185,7 +170,7 @@ element:
 ;
 
 paragraph:
-    OPEN_P {printf("<p ");} attr_list_opt TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_P {printf("</p>\n");}
+    OPEN_P {printf("<p ");} attr_list TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_P {printf("</p>\n");}
 ;
 
 anchor:
@@ -202,7 +187,7 @@ image:
 ;
 
 form:
-    OPEN_FORM {printf("<form ");} attr_list_opt TAG_CLOSE {printf(">\n");} form_content CLOSE_FORM {printf("</form>\n");}
+    OPEN_FORM {printf("<form ");} attr_list TAG_CLOSE {printf(">\n");} form_content CLOSE_FORM {printf("</form>\n");}
 ;
 
 form_content:
@@ -219,20 +204,15 @@ input:
 ;
 
 label:
-    OPEN_LABEL  {printf("<label ");}attr_list_opt TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_LABEL {printf("</label>\n");}
+    OPEN_LABEL  {printf("<label ");}attr_list TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_LABEL {printf("</label>\n");}
 ;
 
 division:
-    OPEN_DIV {printf("<div ");} attr_list_opt TAG_CLOSE {printf(">\n");} body_elements_opt CLOSE_DIV {printf("</div>\n");}
-;
-
-attr_list_opt:
-    /* empty */
-    | attr_list
+    OPEN_DIV {printf("<div ");} attr_list TAG_CLOSE {printf(">\n");} body_elements CLOSE_DIV {printf("</div>\n");}
 ;
 
 attr_list:
-    attribute
+    /* empty */
     | attr_list attribute
 ;
 

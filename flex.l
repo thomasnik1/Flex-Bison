@@ -31,7 +31,7 @@ char str_buf[200];
 <INITIAL>"<a"[ \t\n\r]*        { BEGIN(IN_TAG); return OPEN_A; }
 <INITIAL>"</a>"                { return CLOSE_A; }
 
-<INITIAL>"<img"[ \t\n\r]*     { BEGIN(IN_TAG); return OPEN_IMG; }
+<INITIAL>"<img"[ \t\n\r]*      { BEGIN(IN_TAG); return OPEN_IMG; }
 
 <INITIAL>"<form"[ \t\n\r]*     { BEGIN(IN_TAG); return OPEN_FORM; }
 <INITIAL>"</form>"             { return CLOSE_FORM; }
