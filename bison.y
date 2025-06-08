@@ -22,8 +22,13 @@ int element_count = 0;
 char* input_ids[100];
 int input_id_count = 0;
 
+char* label_for[100];
+int label_for_count = 0;
+
 int submit_input_count = 0;
 int last_input_line = 0;
+
+int input_flag = 0;
 
 int is_unique_id(const char* id) {
     for (int i = 0; i < element_count; i++) {
@@ -38,6 +43,19 @@ void add_element_id(const char* id) {
 
 void add_input_id(const char* id) {
     input_ids[input_id_count++] = strdup(id);
+}
+
+void add_label_for(const char* for_id){
+    label_for[label_for_count] = strdup(for_id);
+    label_for_count++;
+}
+
+int match_for_id(const char *id){
+    for (int i = 0; i < label_for_count; i++){
+        if (strcmp(label_for[i], id) == 0){
+            return 1;
+        }
+    }
 }
 
 int input_id_exists(const char* id) {
@@ -200,11 +218,11 @@ form_element:
 ;
 
 input:
-    OPEN_INPUT {printf("<input ");} attr_list TAG_CLOSE {printf(">\n");}
+    OPEN_INPUT {printf("<input "); input_flag = 1;} attr_list TAG_CLOSE {printf(">\n");}
 ;
 
 label:
-    OPEN_LABEL  {printf("<label ");}attr_list TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_LABEL {printf("</label>\n");}
+    OPEN_LABEL  {printf("<label ");}attr_list TAG_CLOSE {printf(">\n");} TEXT {printf("%s",yylval.str);} CLOSE_LABEL {printf("\n</label>\n");}
 ;
 
 division:
@@ -219,6 +237,10 @@ attr_list:
 attribute:
     ID_ATTR {printf("id");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}{
         if (!is_unique_id($5)) yyerror("Duplicate ID");
+        else if(input_flag == 1){
+            if(!match_for_id($5)) yyerror("unmatched label");
+            input_flag = 0;
+        }
         else {
             add_element_id($5);
             add_input_id($5);
@@ -242,7 +264,7 @@ attribute:
         }
     }
     | FOR_ATTR {printf("for");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}{
-        if (!input_id_exists($5)) yyerror("'for' must reference a valid input id");
+        add_label_for($5);
     }
     | NAME_ATTR {printf("name");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}
     | VALUE_ATTR {printf("value");} EQUALS {printf("=");} QUOTED_STRING {printf("\"%s\"",yylval.str);}
